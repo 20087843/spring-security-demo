@@ -11,7 +11,7 @@ Spring Security 用户登录及 token 认证
 
 ### Spring Security 架构及原理
 1. 架构
-![architecture](resources/auth arch.png)
+![architecture](/resources/auth arch.png)
 
 2. 认证流程
   - 认证流程逻辑
