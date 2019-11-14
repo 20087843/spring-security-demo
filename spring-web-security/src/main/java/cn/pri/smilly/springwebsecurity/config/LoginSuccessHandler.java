@@ -6,21 +6,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.DefaultRedirectStrategy;
-import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Slf4j
 @Component
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     @Autowired
     private MemoryUserDetailService userDetailsService;
     @Autowired
@@ -36,12 +35,17 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     }
 
     protected void handleRequest(HttpServletRequest request, HttpServletResponse response, String token) throws IOException {
-        String targetUrl = "/home";
         if (response.isCommitted()) {
-            log.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            log.debug("Response has already been committed.");
             return;
         }
-        redirectStrategy.sendRedirect(request, response, targetUrl + "?token=" + token);
+
+        // write token to client
+        response.addHeader(TokenComponent.REQUEST_TOKEN_HEADER, TokenComponent.REQUEST_TOKEN_HEAD + token);
+        try (PrintWriter writer = response.getWriter()) {
+            writer.write(token);
+            writer.flush();
+        }
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request) {

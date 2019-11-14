@@ -26,7 +26,7 @@ public class LogoutSuccessHandler implements LogoutHandler {
         String username = tokenComponent.parserUsernameFromToken(token);
         log.info(username + " logged out");
         try {
-            redirectStrategy.sendRedirect(request, response, "/login");
+            redirectStrategy.sendRedirect(request, response, "/");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

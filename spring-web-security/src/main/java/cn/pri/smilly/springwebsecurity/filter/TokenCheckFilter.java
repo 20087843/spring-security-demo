@@ -33,7 +33,7 @@ public class TokenCheckFilter extends GenericFilterBean {
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = userDetailsService.loadUserByUsername(username);
                 if (tokenComponent.validateToken(token, user)) {
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) request));
                     SecurityContextHolder.getContext().setAuthentication(authentication); //设置用户登录状态
                 }
