@@ -5,21 +5,23 @@ Spring Security 用户登录及 token 认证
 1. 启动项目, 默认端口 8080
 2. 访问 localhost:8080/login 输入用户名和密码(配置在 WebSecurityConfiguration.configure(AuthenticationManagerBuilder auth) 中)
 3. 登录成功返回用户登录成功的 token 
-![login success](resources/login success.png)
+![login success](resources/login_success.png)
 4. 用获取到的 token 访问服务器资源
-![user page](resources/user page.png)
+![user page](resources/user_page.png)
 
 ### Spring Security 架构及原理
+
 1. 架构
-![architecture](resources/auth arch.png)
+  
+  ![architecture](resources/auth_arch.png)
 
 2. 认证流程
   - 认证流程逻辑
-  ![authentication flow logic](resources/auth flow detail.tmp)
+    ![authentication flow logic](resources/auth_flow_detail.tmp)
   - AuthenticationFilter 配置及工作流程
-  ![AuthenticationFilter work flow](resources/Filter Work Flow.png)
+    ![AuthenticationFilter work flow](resources/filter_work_flow.png)
   - 认证流程组件关系
-    ![authentication flow relation](resources/auth flow.png)
+    ![authentication flow relation](resources/auth_flow.png)
   
 3. 组件说明
   - SecurityContext 安全认证上下文，用户通过Spring Security 的校验之后，验证信息存储在SecurityContext中
