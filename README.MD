@@ -17,12 +17,15 @@ Spring Security 用户登录及 token 认证
 
 2. 认证流程
   - 认证流程逻辑
-    ![authentication flow logic](resources/auth_flow_detail.tmp)
+  
+    ![authentication flow logic](resources/auth_flow_detail.png)
   - AuthenticationFilter 配置及工作流程
+  
     ![AuthenticationFilter work flow](resources/filter_work_flow.png)
   - 认证流程组件关系
-    ![authentication flow relation](resources/auth_flow.png)
   
+    ![authentication flow relation](resources/auth_flow.png)
+
 3. 组件说明
   - SecurityContext 安全认证上下文，用户通过Spring Security 的校验之后，验证信息存储在SecurityContext中
   - SecurityContextHolder 在 SecurityContextPersistenceFilter 生成 SecurityContext 并存储在 SecurityContextHolder 中。SecurityContextHolder 有三种SecurityContext的存储策略：
@@ -46,3 +49,6 @@ Spring Security 用户登录及 token 认证
 5. [Spring Secutity 自定义权限配置](https://segmentfault.com/a/1190000010232638)
 6. [Spring Security 之多AuthenticationProvider认证模式实现](https://blog.csdn.net/yaomingyang/article/details/98785488)
 7. [spring security 核心 access-control](https://www.jianshu.com/p/2b6ebe9423f2)
+8. [基于注解的Spring Security原理解析](https://blog.csdn.net/icarusliu/article/details/78739006)
+9. [Spring Security Filter详解](https://blog.csdn.net/icarusliu/article/details/78722384)
+10. [Spring Security启动过程](https://blog.csdn.net/shenchaohao12321/article/details/87714141)
