@@ -20,20 +20,14 @@ public class TokenComponent {
     private static final String CLAIM_KEY_ROLES = "roles";
     public static final String REQUEST_TOKEN_HEADER = "Authorization";
     public static final String REQUEST_TOKEN_HEAD = "Bearer ";
+    public static final String REQUEST_TOKEN_PARAM = "token";
 
     @Value("${jwt.token.secret}")
     private String secret;
     @Value("${jwt.token.expiration}")
     private long expiration;
 
-    public String parseTokenFromRequest(HttpServletRequest request){
-        String token = request.getParameter("token");
-        String authHeader = request.getHeader(TokenComponent.REQUEST_TOKEN_HEADER);
-        if (!StringUtils.isEmpty(authHeader) && authHeader.startsWith(TokenComponent.REQUEST_TOKEN_HEAD)) {
-            token = authHeader.substring(TokenComponent.REQUEST_TOKEN_HEAD.length()); //如果header中存在token，则覆盖掉url中的token
-        }
-        return token;
-    }
+    private Map<String, String> tokenStore = new HashMap<>();
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -41,6 +35,16 @@ public class TokenComponent {
         claims.put(CLAIM_KEY_CREATED, new Date());
         claims.put(CLAIM_KEY_ROLES, userDetails.getAuthorities());
         String token = generateToken(claims);
+        tokenStore.put(userDetails.getUsername(), token);
+        return token;
+    }
+
+    public String parseTokenFromRequest(HttpServletRequest request) {
+        String token = request.getParameter(TokenComponent.REQUEST_TOKEN_PARAM);
+        String authHeader = request.getHeader(TokenComponent.REQUEST_TOKEN_HEADER);
+        if (!StringUtils.isEmpty(authHeader) && authHeader.startsWith(TokenComponent.REQUEST_TOKEN_HEAD)) {
+            token = authHeader.substring(TokenComponent.REQUEST_TOKEN_HEAD.length()); //如果header中存在token，则覆盖掉url中的token
+        }
         return token;
     }
 
@@ -56,7 +60,13 @@ public class TokenComponent {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = parserUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && isTokenExpired(token) == false);
+        return username.equals(userDetails.getUsername())
+                && !isTokenExpired(token)
+                && tokenStore.containsKey(username);
+    }
+
+    public void releaseToken(String username) {
+        tokenStore.remove(username);
     }
 
     private Date getExpirationDateFromToken(String token) {
